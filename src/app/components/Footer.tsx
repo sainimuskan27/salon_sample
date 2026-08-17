@@ -1,4 +1,10 @@
+"use client";
+
+import { useState } from "react";
+import BookingModal from "./BookingModal";
+
 export default function Footer() {
+  const [bookingOpen, setBookingOpen] = useState(false);
   return (
     <footer id="contact" className="bg-[#292323] px-5 sm:px-8 pb-8 pt-14 sm:pt-20 text-white">
 
@@ -86,26 +92,27 @@ export default function Footer() {
             </h3>
             <div className="mt-5 space-y-3">
               <a
-                href="tel:+919876543210"
+                href="tel:+917717399046"
                 className="block text-sm text-white/60 transition hover:text-white"
               >
-                +91 98765 43210
+                +91 77173 99046
               </a>
               <a
-                href="mailto:hello@serenabeauty.com"
+                href="mailto:sainimuskan731@gmail.com"
                 className="block text-sm text-white/60 transition hover:text-white"
               >
-                hello@serenabeauty.com
+                sainimuskan731@gmail.com
               </a>
             </div>
 
             {/* Quick book CTA */}
-            <a
-              href="#contact"
+            <button
+              id="footer-quick-book-btn"
+              onClick={() => setBookingOpen(true)}
               className="mt-7 inline-flex items-center gap-2 rounded-full bg-[#f3d6dc] px-5 py-2.5 text-sm font-medium text-[#292323] transition hover:bg-white"
             >
               Book Now ↗
-            </a>
+            </button>
           </div>
 
         </div>
@@ -118,13 +125,14 @@ export default function Footer() {
               <br />
               <span className="italic text-[#d8a9b4]">moment awaits.</span>
             </h2>
-            <a
-              href="#contact"
+            <button
+              id="footer-cta-book-btn"
+              onClick={() => setBookingOpen(true)}
               className="shrink-0 flex items-center gap-3 rounded-full bg-[#f3d6dc] px-6 sm:px-7 py-3.5 text-sm font-medium text-[#292323] transition hover:bg-white hover:shadow-lg"
             >
               Book Now
               <span>↗</span>
-            </a>
+            </button>
           </div>
         </div>
 
@@ -139,6 +147,8 @@ export default function Footer() {
         </div>
 
       </div>
+
+      <BookingModal isOpen={bookingOpen} onClose={() => setBookingOpen(false)} />
     </footer>
   );
 }

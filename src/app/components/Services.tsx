@@ -1,4 +1,8 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
+import BookingModal from "./BookingModal";
 
 const services = [
   {
@@ -44,7 +48,10 @@ const services = [
 ];
 
 export default function Services() {
+  const [bookingOpen, setBookingOpen] = useState(false);
+
   return (
+    <>
     <section
       id="services"
       className="bg-[#faf8f5] px-5 sm:px-8 py-16 lg:py-24"
@@ -150,15 +157,19 @@ export default function Services() {
               Let&apos;s make you feel beautiful.
             </h3>
           </div>
-          <a
-            href="#contact"
+          <button
+            id="services-book-appointment-btn"
+            onClick={() => setBookingOpen(true)}
             className="shrink-0 rounded-full bg-[#f3d6dc] px-7 py-3.5 text-sm font-medium text-[#292323] transition duration-300 hover:bg-white hover:shadow-lg"
           >
             Book an Appointment
-          </a>
+          </button>
         </div>
 
       </div>
     </section>
+
+      <BookingModal isOpen={bookingOpen} onClose={() => setBookingOpen(false)} />
+    </>
   );
 }

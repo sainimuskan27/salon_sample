@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import BookingModal from "./BookingModal";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [bookingOpen, setBookingOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
@@ -15,9 +17,11 @@ export default function Navbar() {
 
   // Lock body scroll when menu is open
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
+    if (!bookingOpen) {
+      document.body.style.overflow = menuOpen ? "hidden" : "";
+    }
     return () => { document.body.style.overflow = ""; };
-  }, [menuOpen]);
+  }, [menuOpen, bookingOpen]);
 
   const navLinks = [
     { href: "#home", label: "Home" },
@@ -30,11 +34,10 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-          scrolled
-            ? "bg-[#faf8f5]/90 backdrop-blur-xl shadow-sm shadow-[#b76578]/10 py-3"
-            : "bg-[#faf8f5] py-5"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled
+          ? "bg-[#faf8f5]/90 backdrop-blur-xl shadow-sm shadow-[#b76578]/10 py-3"
+          : "bg-[#faf8f5] py-5"
+          }`}
       >
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 sm:px-8">
 
@@ -72,16 +75,17 @@ export default function Navbar() {
             {/* Phone — only large screens */}
             <div className="hidden text-right xl:block">
               <p className="text-[9px] uppercase tracking-widest text-[#a18d91]">Bookings</p>
-              <p className="text-sm font-medium text-[#292323]">+91 98765 43210</p>
+              <p className="text-sm font-medium text-[#292323]">+91 77XXXXXXXX</p>
             </div>
 
             {/* Book button — hidden on very small mobile to save space */}
-            <a
-              href="#contact"
+            <button
+              id="navbar-book-now-btn"
+              onClick={() => setBookingOpen(true)}
               className="hidden sm:inline-flex items-center rounded-full bg-[#292323] px-5 py-2.5 text-sm font-medium text-white transition-all duration-300 hover:bg-[#b76578] hover:shadow-lg hover:shadow-[#b76578]/20 hover:scale-105"
             >
               Book Now
-            </a>
+            </button>
 
             {/* Hamburger — mobile only */}
             <button
@@ -92,19 +96,16 @@ export default function Navbar() {
             >
               <div className="relative h-4 w-5 flex flex-col justify-between">
                 <span
-                  className={`block h-[1.5px] w-full bg-[#292323] transition-all duration-300 origin-center ${
-                    menuOpen ? "rotate-45 translate-y-[7px]" : ""
-                  }`}
+                  className={`block h-[1.5px] w-full bg-[#292323] transition-all duration-300 origin-center ${menuOpen ? "rotate-45 translate-y-[7px]" : ""
+                    }`}
                 />
                 <span
-                  className={`block h-[1.5px] w-full bg-[#292323] transition-all duration-300 ${
-                    menuOpen ? "opacity-0 scale-x-0" : ""
-                  }`}
+                  className={`block h-[1.5px] w-full bg-[#292323] transition-all duration-300 ${menuOpen ? "opacity-0 scale-x-0" : ""
+                    }`}
                 />
                 <span
-                  className={`block h-[1.5px] bg-[#292323] transition-all duration-300 origin-center ${
-                    menuOpen ? "w-full -rotate-45 -translate-y-[7px]" : "w-3/4"
-                  }`}
+                  className={`block h-[1.5px] bg-[#292323] transition-all duration-300 origin-center ${menuOpen ? "w-full -rotate-45 -translate-y-[7px]" : "w-3/4"
+                    }`}
                 />
               </div>
             </button>
@@ -114,17 +115,15 @@ export default function Navbar() {
 
       {/* Mobile Menu Overlay */}
       <div
-        className={`fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 md:hidden ${
-          menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
+        className={`fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-opacity duration-300 md:hidden ${menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          }`}
         onClick={() => setMenuOpen(false)}
       />
 
       {/* Mobile Menu Drawer */}
       <div
-        className={`fixed top-0 right-0 bottom-0 z-40 w-72 max-w-[85vw] bg-[#faf8f5] shadow-2xl transition-transform duration-400 ease-in-out md:hidden flex flex-col ${
-          menuOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed top-0 right-0 bottom-0 z-40 w-72 max-w-[85vw] bg-[#faf8f5] shadow-2xl transition-transform duration-400 ease-in-out md:hidden flex flex-col ${menuOpen ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         {/* Drawer header */}
         <div className="flex items-center justify-between border-b border-[#e7dfe0] px-6 py-5 mt-16">
@@ -157,19 +156,22 @@ export default function Navbar() {
 
         {/* Drawer footer */}
         <div className="border-t border-[#e7dfe0] px-6 py-6">
-          <a
-            href="#contact"
-            onClick={() => setMenuOpen(false)}
+          <button
+            id="mobile-drawer-book-btn"
+            onClick={() => { setMenuOpen(false); setBookingOpen(true); }}
             className="block w-full rounded-full bg-[#292323] py-3.5 text-center text-sm font-medium text-white transition hover:bg-[#b76578]"
           >
             Book Appointment
-          </a>
-          <p className="mt-4 text-center text-xs text-[#a18d91]">+91 98765 43210</p>
+          </button>
+          <p className="mt-4 text-center text-xs text-[#a18d91]">+91 77XXXXXXXX</p>
         </div>
       </div>
 
       {/* Spacer so content doesn't hide behind fixed navbar */}
       <div className={`transition-all duration-500 ${scrolled ? "h-16" : "h-20"}`} />
+
+      {/* Booking Modal */}
+      <BookingModal isOpen={bookingOpen} onClose={() => setBookingOpen(false)} />
     </>
   );
 }
